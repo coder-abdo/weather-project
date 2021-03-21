@@ -78,6 +78,8 @@ button {
   font-family: "Oswald", sans-serif;
   border: none;
   box-shadow: 2px 4px 5px #444;
+  position: relative;
+  z-index: 100;
 }
 h1 {
   font-size: 36px;

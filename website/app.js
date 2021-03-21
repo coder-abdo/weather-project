@@ -13,48 +13,42 @@ const $generateBtn = $appContainer.querySelector("#generate");
 // Create a new date instance dynamically with JS
 let d = new Date();
 let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
-const postData = async (url, data) => {
-  try {
-    const postData = await fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-cache",
-      credentials: "same-origin",
-      body: JSON.stringify(data),
-    });
-    const result = await postData.json();
-    return result;
-  } catch (error) {
-    console.error(error);
-  }
+const postData = (url, data) => {
+  fetch(url, {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-cache",
+    credentials: "same-origin",
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then((data) => data);
 };
-const updateUi = async () => {
-  try {
-    const fetchingData = await fetch("/all");
-    const result = await fetchingData.json();
-    $dateHolder.textContent = result && result.date;
-    $tempHolder.textContent = result && result.temp;
-    $contentHolder.textContent = result && result.feelings;
-  } catch (error) {
-    console.error(error);
-  }
+const updateUi = () => {
+  fetch("/all")
+    .then((res) => res.json())
+    .then((data) => {
+      $dateHolder.textContent = data && data.date;
+      $tempHolder.textContent = data && data.temp;
+      $contentHolder.textContent = data && data.feelings;
+    })
+    .catch((err) => console.error(err));
 };
-const fetchWeather = async (zip) => {
-  try {
-    const data = await fetch(`${BASE_URL}?zip=${zip}&appid=${API_KEY}`);
-    const result = await data.json();
-    await postData("/addWeather", {
-      temp: result && result.main && result.main.temp,
-      date: newDate,
-      feelings: $feelingsField.value,
-    });
-    await updateUi();
-  } catch (error) {
-    console.error(error);
-  }
+const fetchWeather = (zip) => {
+  fetch(`${BASE_URL}?zip=${zip}&appid=${API_KEY}`)
+    .then((res) => res.json())
+    .then((data) => {
+      postData("/addWeather", {
+        temp: data && data.main && data.main.temp,
+        date: newDate,
+        feelings: $feelingsField.value,
+      });
+      updateUi();
+    })
+    .catch((err) => console.error(err));
 };
 
 // generate data
