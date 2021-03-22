@@ -31,14 +31,14 @@ const updateUi = () => {
   fetch("/all")
     .then((res) => res.json())
     .then((data) => {
-      $dateHolder.textContent = data && data.date;
-      $tempHolder.textContent = data && data.temp;
-      $contentHolder.textContent = data && data.feelings;
+      $dateHolder.innerHTML = data && data.date;
+      $tempHolder.innerHTML = data && data.temp;
+      $contentHolder.innerHTML = data && data.feelings;
     })
     .catch((err) => console.error(err));
 };
-const fetchWeather = (zip) => {
-  fetch(`${BASE_URL}?zip=${zip}&appid=${API_KEY}`)
+const fetchWeather = async (zip) => {
+  fetch(`${BASE_URL}?zip=${zip}&units=metric&appid=${API_KEY}`)
     .then((res) => res.json())
     .then((data) => {
       postData("/addWeather", {
