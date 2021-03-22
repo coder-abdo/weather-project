@@ -46,8 +46,8 @@ const fetchWeather = async (zip) => {
         date: newDate,
         feelings: $feelingsField.value,
       });
-      updateUi();
     })
+    .then(() => updateUi())
     .catch((err) => console.error(err));
 };
 
