@@ -12,7 +12,7 @@ const $contentHolder = $holderContainer.querySelector("#content");
 const $generateBtn = $appContainer.querySelector("#generate");
 // Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
+let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
 const postData = (url, data) => {
   fetch(url, {
     method: "POST",
@@ -27,17 +27,18 @@ const postData = (url, data) => {
     .then((res) => res.json())
     .then((data) => data);
 };
-const updateUi = () => {
-  fetch("/all")
-    .then((res) => res.json())
-    .then((data) => {
-      $dateHolder.innerHTML = data && data.date;
-      $tempHolder.innerHTML = data && data.temp;
-      $contentHolder.innerHTML = data && data.feelings;
-    })
-    .catch((err) => console.error(err));
+const updateUi = async () => {
+  try {
+    const fetching = await fetch("/all");
+    const data = await fetching.json();
+    $dateHolder.innerHTML = data ? data.date : "";
+    $tempHolder.innerHTML = data ? data.temp : "";
+    $contentHolder.innerHTML = data ? data.feelings : "";
+  } catch (error) {
+    console.error(error);
+  }
 };
-const fetchWeather = async (zip) => {
+const fetchWeather = (zip) => {
   fetch(`${BASE_URL}?zip=${zip}&units=metric&appid=${API_KEY}`)
     .then((res) => res.json())
     .then((data) => {
